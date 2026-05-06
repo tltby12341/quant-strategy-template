@@ -41,8 +41,10 @@ client_secret*.json
 .idea/
 .vscode/
 
-# Claude Code
-.claude/
+# Claude Code — track shared commands/settings, ignore local-only state
+.claude/settings.local.json
+.claude/cache/
+.claude/sessions/
 
 # RAG / Vector DB
 **/rag_db/
