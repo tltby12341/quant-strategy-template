@@ -39,12 +39,32 @@ python3 strategy_research/skills/StrategyForge/discover.py --orders-csv <csv>
 
 ## 回测完成后
 
+### 步骤 A：评分（自动写入 StrategyForge 内部状态）
+
 ```bash
 python3 strategy_research/skills/StrategyForge/evaluate.py run \
   --backtest-id <id> --name <F序号_名称> --direction "<用户原话>"
 ```
 
-这会自动: Forge Score 评分 → 基准对比 → 记录实验日志 → 方向穷尽检查 → RAG更新 → 失败模式频率 → 下一轮取证
+这会自动: Forge Score 评分 → 基准对比 → 记录实验日志（`experiments.tsv`）→ 方向穷尽检查 → RAG 更新（`bans.json` / `lessons.json`）→ 失败模式频率 → 下一轮取证
+
+### 步骤 B：wiki 回写（**人类可读知识库 — 必须手动执行**）
+
+`evaluate.py` **不写** `llm-wiki/*.md`。每次回测完成后必做：
+
+| 文件 | 何时更新 | 写什么 |
+|------|---------|--------|
+| `llm-wiki/performance-matrix.md` | **每次回测** | 新增一行：版本 / 关键参数 / NP / CAR / Sharpe / MaxDD / Calmar / WR / Orders / Top-1 ticker % / vs 基准超额 / Backtest ID |
+| `llm-wiki/decisions-log.md` | **有新结论 / 转折点时** | 追加新 Phase：背景 / 关键决策表 / 结果 / 下一步 |
+| `llm-wiki/dead-ends.md` | **方向被证伪时** | 追加 DN 条目，区分方向性 / 实现性 / 条件性 |
+| `llm-wiki/phoenix-protocol.md` | **同一结论被 ≥2 个独立回测验证时** | 升级为铁律（DON'T 或 DO） |
+| `llm-wiki/history.md` | **大版本（vX.0）切换时** | 记录起源、转折、结论 |
+
+每条数据必须显式标注：**初始资金 + 测试区间 + 样本量**。
+
+### 步骤 C：OOS 触碰登记（仅当本次回测动了 OOS 区间）
+
+在 `llm-wiki/validation-plan.md` §OOS 消费记录 追加：日期 / 版本号 / 目的 / 结果 / 剩余次数（最多 2 次）。
 
 ## 铁律
 
