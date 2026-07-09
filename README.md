@@ -9,18 +9,10 @@
 ## 一行命令初始化新策略项目
 
 ```bash
-gh repo create my-new-strategy --template tltby12341/quant-strategy-template --private --clone
-cd my-new-strategy
-cp .env.example .env  # 填入 QuantConnect 凭证
-```
-
-也可以用纯 git（无 gh CLI）：
-
-```bash
 git clone https://github.com/tltby12341/quant-strategy-template.git my-new-strategy
 cd my-new-strategy
 rm -rf .git && git init
-cp .env.example .env
+cp .env.example .env # 填入 QuantConnect 凭证
 ```
 
 ---
